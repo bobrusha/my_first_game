@@ -3,7 +3,7 @@
 //global variables
 int wW = 420, wH = 420;
 int step = 40;
-int maxsteps = ((wW - 10)/ step);
+int maxsteps = ((wW - 20)/ step);
 void boom (int);
 
 unsigned int textures[1];
@@ -12,16 +12,25 @@ unsigned int textures[1];
 class screen
 {
 public:
-	int arr [10][10];
+	int arr [12][12];
 	// 0 - free
 	// 1 - hero
 	// 2 - obj
-	// 3 -  
+	// 3 - enemy
 	screen() 
 	{
 		for (int i = 0; i<10; i++)
 			for ( int j=0; j<10; j++)
 				arr[i][j] = 0;
+
+		for (int i = 0; i<12; i++)
+			arr[i][0] = 2;
+		for (int i = 0; i<12; i++)
+			arr[i][11] = 2;
+		for (int j = 0; j < 12; j++)
+			arr[0][j] = 2;
+		for (int j = 0; j < 12; j++)
+			arr[11][j] = 2;
 	}
 	void clearScreen()
 	{
@@ -35,7 +44,7 @@ screen scrn;
 
 int calculateIndex (int x)
 {
-	x -= 10;
+	x += (step - 10);
 	x /= step;
 	return x;
 }
@@ -46,6 +55,7 @@ int calculateCoordinates (int x)
 	x += 10;
 	return x;
 }
+
 class box
 {
 public:
@@ -81,10 +91,76 @@ class enemy
 {
 public: 
 	int l, r, b, t, dir;
-	enemy(): l (200), r(240), b(200), t(240),dir(0) {}
+	enemy(): l (170), r(210), b(170), t(210), dir(0) 
+	{
 
+	}
+	
+	void MoveL()
+	{
+		if (scrn.arr[calculateIndex (l - step)][calculateIndex(b)] == 0 )
+		{
+			scrn.arr[calculateIndex (l)][calculateIndex(b)] = 0;
+			l -= step;
+			r -= step;
+			scrn.arr[calculateIndex (l)][calculateIndex(b)] = 3; 
+		}
+		else
+			dir = 1;
+	}
+	void MoveR()
+	{
+		if (scrn.arr [calculateIndex (l + step)][calculateIndex(b)] == 0)
+		{
+			scrn.arr [calculateIndex (l)][calculateIndex(b)] = 0;
+			l += step;
+			r += step;
+			scrn.arr[calculateIndex (l)][calculateIndex(b)] = 3; 
+		}
+		else
+			dir = 2;
+	}
+	void MoveU()
+	{
+		if (scrn.arr[calculateIndex (l)][calculateIndex(b - step)] == 0)
+		{
+			scrn.arr[calculateIndex (l)][calculateIndex(b)] = 0;
+			b -= step;
+			t -= step;
+			scrn.arr[calculateIndex (l)][calculateIndex(b)] = 3; 
+		}
+		else
+			dir = 3;
+	}
+	void MoveD()
+	{
+		if (scrn.arr[calculateIndex (l)][calculateIndex(b + step)] == 0 )
+		{
+			scrn.arr[calculateIndex (l)][calculateIndex(b)] = 0;
+			b += step;
+			t += step;
+			scrn.arr[calculateIndex (l)][calculateIndex(b)] = 3; 
+		}
+		else
+			dir = 0;
+	}
+
+	void motion()
+	{ 
+			if (dir == 0)
+				MoveL();
+			if (dir == 1)
+				MoveR();
+			if (dir == 2)
+				MoveU();
+			if (dir == 3)
+				MoveD();
+	}
+	
 	void drawHero()
 	{
+		motion();
+
 		glLineWidth ( 2.0 );		
 		glColor3f(1.0, 0 , 0 );
 		glBegin (GL_QUADS);
@@ -97,53 +173,10 @@ public:
 		glFlush();
 	}
 
-	void MoveL()
-	{
-		if (scrn.arr[calculateIndex (l -step)][calculateIndex(b)] == 0)
-		{
-			scrn.arr[calculateIndex (l)][calculateIndex(b)] = 0;
-			l -= step;
-			r -= step;
-			scrn.arr[calculateIndex (l)][calculateIndex(b)] = 1; 
-		}
-	}
-	void MoveR()
-	{
-		if (scrn.arr [calculateIndex (l + step)][calculateIndex(b)] == 0)
-		{
-			scrn.arr [calculateIndex (l)][calculateIndex(b)] = 0;
-			l += step;
-			r += step;
-			scrn.arr[calculateIndex (l)][calculateIndex(b)] = 1; 
-		}
-	}
-	void MoveU()
-	{
-		if (scrn.arr[calculateIndex (l)][calculateIndex(b - step)] == 0){
-			scrn.arr[calculateIndex (l)][calculateIndex(b)] = 0;
-			b -= step;
-			t -= step;
-			scrn.arr[calculateIndex (l)][calculateIndex(b)] = 1; 
-		}
-	}
-	void MoveD()
-	{
-		if (scrn.arr[calculateIndex (l)][calculateIndex(b + step)] == 0)
-		{
-			scrn.arr[calculateIndex (l)][calculateIndex(b)] = 0;
-			b += step;
-			t += step;
-			scrn.arr[calculateIndex (l)][calculateIndex(b)] = 1; 
-		}
-	}
-
-	void motion()
-	{
-		switch (dir)
-			case 0:
-				MoveR();
-	}
+	
 };
+
+enemy first;
 
 class hero
 {
@@ -181,10 +214,8 @@ public:
 
 			glEnd();
 		glFlush();
-	}
-		//drawHP
-		/*
-		if (hp >= 25)
+
+		if ( lives == 2)
 		{
 			glLineWidth ( 2.0 );		
 			glColor3i( 0, 255 , 0 );
@@ -196,7 +227,7 @@ public:
 			glVertex2i( 380, 10 );
 			glEnd();
 		}
-		if (hp >= 50)
+		if (lives >= 1)
 		{
 			glLineWidth ( 2.0 );		
 			glColor3i( 0, 255 , 0 );
@@ -208,81 +239,84 @@ public:
 			glVertex2i( 360, 10 );
 			glEnd();
 		}
-
-		if (hp >= 75)
-		{
-			glLineWidth ( 2.0 );		
-			glColor3i( 0, 255 , 0 );
-			glBegin (GL_LINE_STRIP);
-			glVertex2i( 340, 10);
-			glVertex2i( 340, 20);
-			glVertex2i( 350, 20);
-			glVertex2i( 350, 10);
-			glVertex2i( 340, 10 );
-			glEnd();
-		}
-		if (hp == 100)
-		{
-			glLineWidth ( 2.0 );		
-			glColor3i( 0, 255 , 0 );
-			glBegin (GL_LINE_STRIP);
-			glVertex2i( 320, 10);
-			glVertex2i( 320, 20);
-			glVertex2i( 330, 20);
-			glVertex2i( 330, 10);
-			glVertex2i( 320, 10 );
-			glEnd();
-		}
 		glFlush();
+	
 	}
-	*/
+
 	// движение героя 
 	//проверяем свободна ли клетка и если да пермещаем в неё героя
 	//освобождаем предыдущую клетку
-
+	void Damaged()
+	{
+		lives --;
+	}
 	void MoveL()
 	{
-		if ( scrn.arr[calculateIndex (l -step)][calculateIndex(b)] == 0 && calculateIndex(l -step) != -1 )
+		if ( scrn.arr[calculateIndex (l - step)][calculateIndex(b)] == 3 )
 		{
-			scrn.arr[calculateIndex (l)][calculateIndex(b)] = 0;
-			l -= step;
-			r -= step;
-			scrn.arr[calculateIndex (l)][calculateIndex(b)] = 1; 
+			Damaged();
 		}
+		else
+			if ( scrn.arr[calculateIndex (l - step)][calculateIndex(b)] == 0 )
+			{
+				scrn.arr[calculateIndex (l)][calculateIndex(b)] = 0;
+				l -= step;
+				r -= step;
+				scrn.arr[calculateIndex (l)][calculateIndex(b)] = 1; 
+			}
 	}
 	void MoveR()
 	{
-		if (scrn.arr [calculateIndex (l + step)][calculateIndex(b)] == 0 && calculateIndex (l + step) != maxsteps)
+		if ( scrn.arr[calculateIndex (l + step)][calculateIndex(b)] == 3 )
 		{
-			scrn.arr [calculateIndex (l)][calculateIndex(b)] = 0;
-			l += step;
-			r += step;
-			scrn.arr[calculateIndex (l)][calculateIndex(b)] = 1; 
+			Damaged();
+		}
+		else
+		{
+			if (scrn.arr [calculateIndex (l + step)][calculateIndex(b)] == 0)
+			{
+				scrn.arr [calculateIndex (l)][calculateIndex(b)] = 0;
+				l += step;
+				r += step;
+				scrn.arr[calculateIndex (l)][calculateIndex(b)] = 1; 
+			}
 		}
 	}
 	void MoveU()
 	{
-		if (scrn.arr[calculateIndex (l)][calculateIndex(b - step)] == 0 && calculateIndex(b - step) != -1){
-			scrn.arr[calculateIndex (l)][calculateIndex(b)] = 0;
-			b -= step;
-			t -= step;
-			scrn.arr[calculateIndex (l)][calculateIndex(b)] = 1; 
+		if ( scrn.arr[calculateIndex (l)][calculateIndex(b - step)] == 3 )
+		{
+			Damaged();
+		}
+		else
+		{
+			if (scrn.arr[calculateIndex (l)][calculateIndex(b - step)] == 0 )
+			{
+				scrn.arr[calculateIndex (l)][calculateIndex(b)] = 0;
+				b -= step;
+				t -= step;
+				scrn.arr[calculateIndex (l)][calculateIndex(b)] = 1; 
+			}
 		}
 	}
 	void MoveD()
 	{
-		if (scrn.arr[calculateIndex (l)][calculateIndex(b + step)] == 0 && calculateIndex(b + step) != maxsteps){
-			scrn.arr [calculateIndex (l)][calculateIndex(b)] = 0;
-			b += step;
-			t += step;
-			scrn.arr[calculateIndex (l)][calculateIndex(b)] = 1; 
+		if ( scrn.arr[calculateIndex (l)][calculateIndex(b + step)] == 3 )
+		{
+			Damaged();
+		}
+		else
+		{
+			if (scrn.arr[calculateIndex (l)][calculateIndex(b + step)] == 0)
+			{
+				scrn.arr [calculateIndex (l)][calculateIndex(b)] = 0;
+				b += step;
+				t += step;
+				scrn.arr[calculateIndex (l)][calculateIndex(b)] = 1; 
+			}
 		}
 	}
 
-	void Damaged ( int dmg )
-	{
-		lives -= dmg;
-	}
 };
 
 hero Main;
@@ -322,7 +356,7 @@ public:
 			(Main.b - b >= 0 && (Main.b - b) <= dst && (Main.r == r)) || 
 			(t - Main.t >= 0 && (t - Main.t) <= dst && (Main.r == r)))
 		{
-			Main.Damaged ( 25 );
+			Main.Damaged ();
 		}
 	}
 };
@@ -349,6 +383,7 @@ void redraw (void)
 	glClear (GL_COLOR_BUFFER_BIT);
 
 	Main.drawHero();
+	first.drawHero();
 	B.drawBomb();
 	BX.Draw();
 

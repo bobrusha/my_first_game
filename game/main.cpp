@@ -2,8 +2,8 @@
 
 //global variables
 int wW = 420, wH = 420;
-int step = 40;
-int maxsteps = ((wW - 20)/ step);
+int step = 40, border = 20;
+int maxsteps = ((wW - border)/ step);
 void boom (int);
 void enemyMotion(int);
 
@@ -22,18 +22,20 @@ public:
 	// 5 - exit
 	screen() 
 	{
-		for (int i = 0; i<10; i++)
-			for ( int j=0; j<10; j++)
+		const int k = (wW - border)/step ;
+
+		for (int i = 0; i < k+2; i++)
+			for ( int j=0; j<k; j++)
 				arr[i][j] = 0;
 
-		for (int i = 0; i<12; i++)
+		for (int i = 0; i < k+2; i++)
 			arr[i][0] = 2;
-		for (int i = 0; i<12; i++)
-			arr[i][11] = 2;
-		for (int j = 0; j < 12; j++)
+		for (int i = 0; i < k+2; i++)
+			arr[i][k+1] = 2;
+		for (int j = 0; j < k+2; j++)
 			arr[0][j] = 2;
-		for (int j = 0; j < 12; j++)
-			arr[11][j] = 2;
+		for (int j = 0; j < k+2; j++)
+			arr[k+1][j] = 2;
 	}
 	void clearScreen()
 	{

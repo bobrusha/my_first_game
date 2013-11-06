@@ -5,6 +5,7 @@ int wW = 420, wH = 420;
 int step = 40;
 int maxsteps = ((wW - 20)/ step);
 void boom (int);
+void enemyMotion(int);
 
 unsigned int textures[1];
 
@@ -17,6 +18,8 @@ public:
 	// 1 - hero
 	// 2 - obj
 	// 3 - enemy
+	// 4 - bonus
+	// 5 - exit
 	screen() 
 	{
 		for (int i = 0; i<10; i++)
@@ -87,6 +90,8 @@ public:
 	
 };
 
+
+
 class enemy
 {
 public: 
@@ -144,22 +149,22 @@ public:
 		else
 			dir = 0;
 	}
-
+	
 	void motion()
 	{ 
-			if (dir == 0)
-				MoveL();
-			if (dir == 1)
-				MoveR();
-			if (dir == 2)
-				MoveU();
-			if (dir == 3)
-				MoveD();
+		if (dir == 0)
+			MoveL();
+		if (dir == 1)
+			MoveR();
+		if (dir == 2)
+			MoveU();
+		if (dir == 3)
+			MoveD();
 	}
 	
 	void drawHero()
 	{
-		motion();
+		//motion();
 
 		glLineWidth ( 2.0 );		
 		glColor3f(1.0, 0 , 0 );
@@ -177,6 +182,7 @@ public:
 };
 
 enemy first;
+
 
 class hero
 {
@@ -390,6 +396,13 @@ void redraw (void)
 	glFlush();
 }
 
+void enemyMotion ( int = 0)
+{
+	first.motion();
+	redraw();
+	glutTimerFunc(300, enemyMotion, 0);
+}
+
 void boom (int = 0)
 {
 	i++;
@@ -485,6 +498,7 @@ int main ( int argc, char** argv)
 	init();
 
 	glutDisplayFunc ( redraw );
+	glutTimerFunc(100, enemyMotion, 0);
 	glutReshapeFunc ( reshapeFunc);
 	glutSpecialFunc ( MyKeyboard );
 	glutMouseFunc  ( MyFunc);

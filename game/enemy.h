@@ -2,13 +2,15 @@
 #define _ENEMY_H_
 
 #include "screen.h"
+
 class enemy
 {
 public: 
 	int l, r, b, t, dir;
 	enemy(): l (170), r(210), b(170), t(210), dir(0) {}
 	enemy( int _l, int _r, int _b, int _t): l (_l), r(_r), b(_b), t(_t), dir(0) {}
-	
+	enemy( enemy& x): l (x.l), r(x.r), b(x.b), t(x.t), dir(x.dir) {}
+	~enemy(){}
 
 	void MoveL (screen& scrn)
 	{

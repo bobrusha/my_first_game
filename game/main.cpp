@@ -1,5 +1,9 @@
+#include <iostream>
+#include <list>
 #include "bomb.h"
 #include "block.h"
+
+using namespace std;
 
 //global variables
 int wW = 420, wH = 420;
@@ -8,7 +12,7 @@ int maxsteps = ((wW - border)/ step);
 void boom (int);
 void enemyMotion(int);
 
-unsigned int textures[1];
+unsigned int textures[10];
 
 //-----------------------------------
 
@@ -26,6 +30,10 @@ hero Main (scrn);
 brick BX (10, 50, 10, 50, scrn);
 bomb B;
 
+//list <screen>  enemies;
+
+//enemies.push_back(scrn);
+
 void init (void)
 {
 	LoadTextures(textures);
@@ -35,7 +43,7 @@ void init (void)
 	glLoadIdentity ();
 	glutInitDisplayMode(GLUT_INDEX);
 	gluOrtho2D (0.0, 420.0, 0.0, 420.0);
-
+	
 }
 
 
@@ -43,11 +51,12 @@ void redraw (void)
 {
 	glClear (GL_COLOR_BUFFER_BIT);
 
-	Main.drawHero(textures[0]);
+	scrn.Draw(wW, wH, textures[0]);
+	Main.drawHero(textures[1]);
 	first.drawHero();
-	B.drawBomb();
+	B.drawBomb(textures[2]);
 	BX.Draw();
-
+	
 	glFlush();
 }
 

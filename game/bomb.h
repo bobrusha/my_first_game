@@ -18,16 +18,25 @@ public:
 		glutTimerFunc(50, boom, 0);
 	}
 
-	void drawBomb()
+	void drawBomb (unsigned int texture)
 	{	
-		glColor3i( 0, 141 , 0);
+		glEnable (GL_TEXTURE_2D);
+		glBindTexture (GL_TEXTURE_2D, texture);
+		
+		glColor3f( 1.0, 1.0 , 1.0);
 		glLineWidth ( 2.0 );		
-		glBegin (GL_LINE_STRIP);
+		glBegin (GL_QUADS);
+
+			glTexCoord2f ( 0.0, 0.0);
 			glVertex2i( l , b);
-			glVertex2i( r , t);
-			glVertex2i( r , b);
+			glTexCoord2f ( 0.0, 1.0);
 			glVertex2i( l , t);
-			glVertex2i( l , b);
+			glTexCoord2f ( 1.0, 1.0);
+			glVertex2i( r , t);
+
+			glTexCoord2f ( 1.0, 0.0);
+			glVertex2i( r , b);
+			
 		glEnd();
 
 		glFlush();

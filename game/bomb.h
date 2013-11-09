@@ -41,7 +41,8 @@ public:
 
 		glFlush();
 	}
-
+	void damage ();
+	/*
 	void damage ( hero &hr, enemy & nmy)
 	{
 		if  ((hr.r - r >= 0 && (hr.r - r) <= dst && (hr.b == b)) ||  
@@ -56,10 +57,10 @@ public:
 			(nmy.b - b >= 0 && (nmy.b - b) <= dst && (nmy.r == r)) || 
 			(t - nmy.t >= 0 && (t - nmy.t) <= dst && (nmy.r == r)))
 		{
-			nmy.Damaged();
+			//kill enemy
 			
 		}
-	}
+	}*/
 };
 
 #endif

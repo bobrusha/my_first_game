@@ -1,7 +1,9 @@
 #ifndef _ENEMY_H_
 #define _ENEMY_H_
 
-#include "screen.h"
+
+#include "hero.h"
+
 
 class enemy
 {
@@ -9,68 +11,93 @@ public:
 	int l, r, b, t, dir;
 	enemy(): l (170), r(210), b(170), t(210), dir(0) {}
 	enemy( int _l, int _r, int _b, int _t): l (_l), r(_r), b(_b), t(_t), dir(0) {}
-	enemy( enemy& x): l (x.l), r(x.r), b(x.b), t(x.t), dir(x.dir) {}
+	enemy( enemy* x): l (x->l), r(x->r), b(x->b), t(x->t), dir(x->dir) {}
 	~enemy(){}
 
-	void MoveL (screen& scrn)
+	void MoveL (screen& scrn, hero& mhero)
 	{
-		if (scrn.arr[calculateIndex (l - step)][calculateIndex(b)] == 0 )
+		switch (scrn.arr [calculateIndex (l - step)][calculateIndex(b)])
 		{
-			scrn.arr[calculateIndex (l)][calculateIndex(b)] = 0;
-			l -= step;
-			r -= step;
-			scrn.arr[calculateIndex (l)][calculateIndex(b)] = 3; 
+			case 0:
+				scrn.arr [calculateIndex (l)][calculateIndex(b)] = 0;
+				l -= step;
+				r -= step;
+				scrn.arr[calculateIndex (l)][calculateIndex(b)] = 3;
+				std::cout<<"<<"<<std::endl;
+				break;
+			case 1:
+				mhero.Damaged();
+				break;
+			default:
+				dir = 1;
+				break;
 		}
-		else
-			dir = 1;
 	}
-	void MoveR (screen& scrn)
+	void MoveR (screen& scrn, hero& mhero)
 	{
-		if (scrn.arr [calculateIndex (l + step)][calculateIndex(b)] == 0)
+		switch (scrn.arr [calculateIndex (l + step)][calculateIndex(b)])
 		{
-			scrn.arr [calculateIndex (l)][calculateIndex(b)] = 0;
-			l += step;
-			r += step;
-			scrn.arr[calculateIndex (l)][calculateIndex(b)] = 3; 
+			case 0:
+				scrn.arr [calculateIndex (l)][calculateIndex(b)] = 0;
+				l += step;
+				r += step;
+				scrn.arr[calculateIndex (l)][calculateIndex(b)] = 3;
+				break;
+			case 1:
+				mhero.Damaged();
+				break;
+			default:
+				dir = 2;
+				break;
 		}
-		else
-			dir = 2;
 	}
-	void MoveU (screen& scrn)
+	void MoveU (screen& scrn, hero& mhero)
 	{
-		if (scrn.arr[calculateIndex (l)][calculateIndex(b - step)] == 0)
+		switch (scrn.arr [calculateIndex (l)][calculateIndex(b+step)])
 		{
-			scrn.arr[calculateIndex (l)][calculateIndex(b)] = 0;
-			b -= step;
-			t -= step;
-			scrn.arr[calculateIndex (l)][calculateIndex(b)] = 3; 
-		}
-		else
+		case 0:
+				scrn.arr [calculateIndex (l)][calculateIndex(b)] = 0;
+				b += step;
+				t += step;
+				scrn.arr[calculateIndex (l)][calculateIndex(b)] = 3;
+				break;
+		case 1:
+			mhero.Damaged();
+			break;
+		default:
 			dir = 3;
-	}
-	void MoveD (screen& scrn)
-	{
-		if (scrn.arr[calculateIndex (l)][calculateIndex(b + step)] == 0 )
-		{
-			scrn.arr[calculateIndex (l)][calculateIndex(b)] = 0;
-			b += step;
-			t += step;
-			scrn.arr[calculateIndex (l)][calculateIndex(b)] = 3; 
+			break;
 		}
-		else
-			dir = 0;
+	}
+	void MoveD (screen& scrn, hero& mhero)
+	{
+		switch (scrn.arr [calculateIndex (l)][calculateIndex(b-step)])
+		{
+		case 0:
+				scrn.arr [calculateIndex (l)][calculateIndex(b)] = 0;
+				b -= step;
+				t -= step;
+				scrn.arr[calculateIndex (l)][calculateIndex(b)] = 3;
+				break;
+			case 1:
+				mhero.Damaged();
+				break;
+			default:
+				dir = 0;
+				break;
+		}
 	}
 	
-	void motion( screen& scrn)
+	void motion( screen& scrn, hero& mhero)
 	{ 
 		if (dir == 0)
-			MoveL (scrn);
+			MoveL (scrn, mhero);
 		if (dir == 1)
-			MoveR (scrn);
+			MoveR (scrn, mhero);
 		if (dir == 2)
-			MoveU (scrn);
+			MoveU (scrn, mhero);
 		if (dir == 3)
-			MoveD (scrn);
+			MoveD (scrn, mhero);
 	}
 	
 	void drawHero()
@@ -87,9 +114,6 @@ public:
 		glEnd();
 		glFlush();
 	}
-	void Damaged()
-	{
-
-	}
 };
+
 #endif

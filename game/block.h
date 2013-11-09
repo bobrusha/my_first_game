@@ -11,27 +11,47 @@ public:
 	{
 		scrn.arr[calculateIndex (l)][calculateIndex(b)] = 2;
 	}
-	void Draw()
+	
+	void Draw (unsigned int texture)
 	{
-		glLineWidth ( 2.0 );		
-		glColor3f( 0.0, 1.0 , 0.0 );
+		glEnable (GL_TEXTURE_2D);
+		glBindTexture (GL_TEXTURE_2D, texture);
 
-		glBegin (GL_LINE_STRIP);
+		glLineWidth ( 2.0 );		
+		glColor3f( 1.0, 1.0 , 1.0 );
+
+		glBegin (GL_QUADS);
+			glTexCoord2f (0.0, 0.0);
 			glVertex2i( l , b);
+
+			glTexCoord2f (0.0, 1.0);
 			glVertex2i( l , t);
+
+			glTexCoord2f (1.0, 1.0);
 			glVertex2i( r , t);
+
+			glTexCoord2f (1.0, 0.0);
 			glVertex2i( r , b);
-			glVertex2i( l , b);
-		glEnd();
-		glBegin (GL_LINE_STRIP);
-		glVertex2i( l , b);
-		glVertex2i( r , t);
-		glVertex2i( l , t);
-		glVertex2i( r , b);
 		glEnd();
 		glFlush();
 	}
-	
 };
 
+bool operator == (const brick& b1, const brick& b2)
+{
+	if ( b1.b == b2.b && b1.l == b2.l && b1.t == b2.t && b1.r == b2.r)
+		return true;
+	else 
+		return false;
+}
+
+class beaton
+{
+	int l, r, b, t;
+public:
+	beaton (int _l,int _r, int _b, int _t, screen& scrn): l(_l), r(_r), b(_b), t(_t)
+	{
+		scrn.arr[calculateIndex (l)][calculateIndex(b)] = 4;
+	}
+};
 #endif

@@ -24,15 +24,15 @@ int calculateCoordinates (int x)
 	x += 10;
 	return x;
 }
-
 enemy first;
 hero Main (scrn);
 brick BX (10, 50, 10, 50, scrn);
 bomb B;
 
-//list <screen>  enemies;
+list <enemy> enemies;
+list <enemy>::iterator pos;
 
-//enemies.push_back(scrn);
+list <brick> bricks;
 
 void init (void)
 {
@@ -43,7 +43,15 @@ void init (void)
 	glLoadIdentity ();
 	glutInitDisplayMode(GLUT_INDEX);
 	gluOrtho2D (0.0, 420.0, 0.0, 420.0);
+
+	scrn.Draw(wW, wH, textures[0]);
+	BX.Draw(textures[3]);
+
+	enemies.push_back(first);
+	pos = enemies.begin();
 	
+	bricks.push_back(BX);
+	bricks.push_back(brick (90, 130, 10, 50, scrn));
 }
 
 
@@ -52,21 +60,45 @@ void redraw (void)
 	glClear (GL_COLOR_BUFFER_BIT);
 
 	scrn.Draw(wW, wH, textures[0]);
+	for (list<brick>::iterator i = bricks.begin(); i!= bricks.end(); ++i){
+		i->Draw(textures[3]);
+	}
 	Main.drawHero(textures[1]);
-	first.drawHero();
+	pos->drawHero();
 	B.drawBomb(textures[2]);
-	BX.Draw();
 	
 	glFlush();
 }
 
 void enemyMotion ( int = 0)
 {
-	first.motion (scrn);
+	pos->motion (scrn, Main);
 	redraw();
 	glutTimerFunc(300, enemyMotion, 0);
 }
 
+void bomb::damage()
+{
+	if (scrn.arr[calculateIndex(l)+1][calculateIndex(b)] != 4)
+	{ 
+		if (scrn.arr[calculateIndex(l)+1][calculateIndex(b)] == 2)
+		{
+			bricks.remove(brick(l+step, l+(2*step), b, t, scrn));
+			scrn.arr[calculateIndex(l)+1][calculateIndex(b)] = 0;
+		}
+	}
+
+	if (scrn.arr[calculateIndex(l)-1][calculateIndex(b)] != 4)
+	{ 
+		if (scrn.arr[calculateIndex(l)-1][calculateIndex(b)] == 2)
+		{
+			bricks.remove(brick(l-step, l, b, t, scrn));
+			scrn.arr[calculateIndex(l)-1][calculateIndex(b)] = 0;
+		}
+	}
+		//else{}
+
+}
 void boom (int = 0)
 {
 	i++;
@@ -76,7 +108,7 @@ void boom (int = 0)
 	}
 	if ( i == 20)
 	{
-		B.damage(Main, first);
+		B.damage();
 		B = bomb();
 		redraw ();
 		glFlush();

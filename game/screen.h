@@ -14,35 +14,40 @@ class screen
 {
 public:
 	int arr [12][12];
+	int k;
 	// 0 - free
 	// 1 - hero
 	// 2 - obj
 	// 3 - enemy
-	// 4 - bonus
-	// 5 - exit
-	screen( int W, int brdr, int stp) 
+	// 4 - 
+	//  - bonus
+	//  - exit
+	void clearScreen()
 	{
-		const int k = (W - brdr)/stp ;
-
 		for (int i = 0; i < k+2; i++)
 			for ( int j=0; j<k; j++)
 				arr[i][j] = 0;
-
+		for (int i = 2; i < k+2; i=i+2)
+			for ( int j=2; j<k; j=j+2)
+			{
+				arr[i][j] = 4;
+			}
+		
 		for (int i = 0; i < k+2; i++)
-			arr[i][0] = 2;
+			arr[i][0] = 4;
 		for (int i = 0; i < k+2; i++)
-			arr[i][k+1] = 2;
+			arr[i][k+1] = 4;
 		for (int j = 0; j < k+2; j++)
-			arr[0][j] = 2;
+			arr[0][j] = 4;
 		for (int j = 0; j < k+2; j++)
-			arr[k+1][j] = 2;
+			arr[k+1][j] = 4;
 	}
-	void clearScreen()
+	
+	screen( int W, int brdr, int stp): k((W - brdr)/stp)
 	{
-		for (int i = 0; i<10; i++)
-			for ( int j=0; j<10; j++)
-				arr[i][j] = 0;
+		clearScreen();
 	}
+	
 	void Draw(int w, int h, unsigned int texture)
 	{
 		glEnable (GL_TEXTURE_2D);

@@ -12,7 +12,7 @@ class bomb
 public:
 	int l, r, b, t, dst;
 	bomb (): l(0), r(0), b(0), t(0), dst(0){}
-	bomb ( int _l, int _r, int _b, int _t):	l(_l), r(_r), b(_b), t(_t), dst(3*step)
+	bomb ( int _l, int _r, int _b, int _t):	l(_l), r(_r), b(_b), t(_t), dst(3)
 	{
 		i = 0;
 		glutTimerFunc(50, boom, 0);
@@ -42,25 +42,7 @@ public:
 		glFlush();
 	}
 	void damage ();
-	/*
-	void damage ( hero &hr, enemy & nmy)
-	{
-		if  ((hr.r - r >= 0 && (hr.r - r) <= dst && (hr.b == b)) ||  
-			(l - hr.l >= 0 && (l - hr.l) <= dst && (hr.b == b)) ||  
-			(hr.b - b >= 0 && (hr.b - b) <= dst && (hr.r == r)) || 
-			(t - hr.t >= 0 && (t - hr.t) <= dst && (hr.r == r)))
-		{
-			hr.Damaged();
-		}
-		if((nmy.r - r >= 0 && (nmy.r - r) <= dst && (nmy.b == b)) ||  
-			(l - nmy.l >= 0 && (l - nmy.l) <= dst && (nmy.b == b)) ||  
-			(nmy.b - b >= 0 && (nmy.b - b) <= dst && (nmy.r == r)) || 
-			(t - nmy.t >= 0 && (t - nmy.t) <= dst && (nmy.r == r)))
-		{
-			//kill enemy
-			
-		}
-	}*/
+	/*Ïåğåïèñàòü ôóíêöèş òàê ÷òîáû îíà áûëà âíóòğè êëàññà*/
 };
 
 #endif

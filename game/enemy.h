@@ -13,7 +13,7 @@ public:
 	enemy( int _l, int _r, int _b, int _t): l (_l), r(_r), b(_b), t(_t), dir(0) {}
 	enemy( enemy* x): l (x->l), r(x->r), b(x->b), t(x->t), dir(x->dir) {}
 	~enemy(){}
-
+	
 	void MoveL (screen& scrn, hero& mhero)
 	{
 		switch (scrn.arr [calculateIndex (l - step)][calculateIndex(b)])
@@ -115,5 +115,13 @@ public:
 		glFlush();
 	}
 };
+
+bool operator == (const enemy& b1, const enemy& b2)
+{
+	if ( b1.b == b2.b && b1.l == b2.l && b1.t == b2.t && b1.r == b2.r)
+		return true;
+	else 
+		return false;
+}
 
 #endif

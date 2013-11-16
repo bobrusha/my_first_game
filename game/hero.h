@@ -1,13 +1,14 @@
 #ifndef _HERO_H
 #define _HERO_H
-#include "screen.h"
+#include "block.h"
 
 class hero
 {
 public:
 	int l, r, b, t, lives;
+	bool inportal;
 
-	hero (screen &scrn): l (90), r(130), b(10), t(50), lives (2) 
+	hero (screen &scrn): l (10), r(50), b(370), t(410), lives (2), inportal(false) 
 	{	
 		scrn.arr[calculateIndex (l)][calculateIndex(b)] = 1;
 	}
@@ -74,8 +75,9 @@ public:
 	{
 		lives --;
 	}
-	void MoveL (screen &scrn)
+	void MoveL (screen &scrn, portal& quit)
 	{
+		
 		if ( scrn.arr[calculateIndex (l - step)][calculateIndex(b)] == 3 )
 		{
 			Damaged();
@@ -88,8 +90,13 @@ public:
 				r -= step;
 				scrn.arr[calculateIndex (l)][calculateIndex(b)] = 1; 
 			}
+			else 
+				if (scrn.arr[calculateIndex (l - step)][calculateIndex(b)] == 6 && quit.up == true)
+				{
+					inportal = true;
+				}
 	}
-	void MoveR (screen &scrn)
+	void MoveR (screen &scrn, portal& quit)
 	{
 		if ( scrn.arr[calculateIndex (l + step)][calculateIndex(b)] == 3 )
 		{
@@ -104,9 +111,14 @@ public:
 				r += step;
 				scrn.arr[calculateIndex (l)][calculateIndex(b)] = 1; 
 			}
+			else 
+				if (scrn.arr[calculateIndex (l + step)][calculateIndex(b)] == 6 && quit.up==true)
+				{
+					inportal = true;
+				}
 		}
 	}
-	void MoveU (screen &scrn)
+	void MoveU (screen &scrn, portal& quit)
 	{
 		if ( scrn.arr[calculateIndex (l)][calculateIndex(b - step)] == 3 )
 		{
@@ -121,9 +133,14 @@ public:
 				t -= step;
 				scrn.arr[calculateIndex (l)][calculateIndex(b)] = 1; 
 			}
+			else 
+				if (scrn.arr[calculateIndex (l)][calculateIndex(b -step)] == 6 && quit.up==true)
+				{
+					inportal = true;
+				}
 		}
 	}
-	void MoveD (screen &scrn)
+	void MoveD (screen &scrn, portal& quit)
 	{
 		if ( scrn.arr[calculateIndex (l)][calculateIndex(b + step)] == 3 )
 		{
@@ -138,6 +155,11 @@ public:
 				t += step;
 				scrn.arr[calculateIndex (l)][calculateIndex(b)] = 1; 
 			}
+			else 
+				if (scrn.arr[calculateIndex (l)][calculateIndex(b + step)] == 6 && quit.up==true)
+				{
+					inportal = true;
+				}
 		}
 	}
 

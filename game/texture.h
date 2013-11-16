@@ -6,7 +6,7 @@
 #include <time.h>
 #include <stdio.h>
 #include <GL/glut.h>
-#include <tchar.h>
+//#include <tchar.h>
 
 namespace myglaux 
 {
@@ -36,6 +36,20 @@ void LoadTextures( unsigned int* textures)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexImage2D(GL_TEXTURE_2D, 0, 3, texture3->sizeX, texture3->sizeY, 0, GL_RGB, GL_UNSIGNED_BYTE, texture3->data);
+
+	myglaux::AUX_RGBImageRec *texture4= myglaux::auxDIBImageLoadA("brick.bmp");
+    glGenTextures(4, &textures[3]);
+    glBindTexture(GL_TEXTURE_2D, textures[3]);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexImage2D(GL_TEXTURE_2D, 0, 3, texture4->sizeX, texture4->sizeY, 0, GL_RGB, GL_UNSIGNED_BYTE, texture4->data);
+
+	myglaux::AUX_RGBImageRec *texture5= myglaux::auxDIBImageLoadA("exit.bmp");
+    glGenTextures(5, &textures[4]);
+    glBindTexture(GL_TEXTURE_2D, textures[4]);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexImage2D(GL_TEXTURE_2D, 0, 3, texture5->sizeX, texture5->sizeY, 0, GL_RGB, GL_UNSIGNED_BYTE, texture5->data);
 
 }
 

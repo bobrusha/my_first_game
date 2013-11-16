@@ -1,6 +1,10 @@
 #ifndef _SCREEN_H_
 #define _SCREEN_H_
+#include <list>
+#include "bomb.h"
 #include "texture.h"
+
+using namespace std;
 
  int step = 40;
 int calculateIndex (int x)
@@ -13,6 +17,7 @@ int calculateIndex (int x)
 class screen
 {
 public:
+	
 	int arr [12][12];
 	int k;
 	// 0 - free
@@ -20,13 +25,16 @@ public:
 	// 2 - obj
 	// 3 - enemy
 	// 4 - 
-	//  - bonus
-	//  - exit
+	// 5 - bonus
+	// 6 - exit
+
+
 	void clearScreen()
 	{
 		for (int i = 0; i < k+2; i++)
 			for ( int j=0; j<k; j++)
 				arr[i][j] = 0;
+
 		for (int i = 2; i < k+2; i=i+2)
 			for ( int j=2; j<k; j=j+2)
 			{
@@ -47,7 +55,12 @@ public:
 	{
 		clearScreen();
 	}
-	
+	screen(screen& tmp)
+	{
+		for (int i = 0; i < k+2; i++)
+			for ( int j=0; j<k; j++)
+				arr[i][j] = tmp.arr[i][j];
+	}
 	void Draw(int w, int h, unsigned int texture)
 	{
 		glEnable (GL_TEXTURE_2D);
@@ -72,5 +85,7 @@ public:
 
 		glFlush();
 	}
+	
+
 };
 #endif

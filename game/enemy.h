@@ -9,81 +9,148 @@ class enemy
 public: 
 	int l, r, b, t, dir;
 	enemy(): l (170), r(210), b(170), t(210), dir(0) {}
-	enemy( int _l, int _r, int _b, int _t): l (_l), r(_r), b(_b), t(_t), dir(0) {}
+	enemy( int _l, int _r, int _b, int _t, screen& scrn): l (_l), r(_r), b(_b), t(_t), dir(0) 
+	{
+		scrn.arr[calculateIndex(b)][calculateIndex (l)] = 3;
+	}
 	enemy( enemy* x): l (x->l), r(x->r), b(x->b), t(x->t), dir(x->dir) {}
 	~enemy(){}
 	
 	void MoveL (screen& scrn, hero& mhero)
 	{
-		switch (scrn.arr [calculateIndex (l - step)][calculateIndex(b)])
+		switch (scrn.arr[calculateIndex(b)][calculateIndex (l - step)])
 		{
 			case 0:
-				scrn.arr [calculateIndex (l)][calculateIndex(b)] = 0;
-				l -= step;
-				r -= step;
-				scrn.arr[calculateIndex (l)][calculateIndex(b)] = 3;
-				std::cout<<"<<"<<std::endl;
+				{
+					std::cout<<scrn.arr[calculateIndex(b)][calculateIndex (l - step)]<<std::endl;
+					scrn.arr[calculateIndex(b)][calculateIndex (l)] = 0;
+					l -= step;
+					r -= step;
+					scrn.arr[calculateIndex(b)][calculateIndex (l)] = 3;
+				}
 				break;
 			case 1:
-				mhero.Damaged();
+				{
+					mhero.Damaged();
+				}
 				break;
-			default:
-				dir = 1;
+			case 3:
+				{
+					dir = 1;
+				}
 				break;
+			case 4:
+				{
+					dir = 1;
+				}
+				break;
+			case 6:
+				{
+					dir = 1;
+				}
+			break;
 		}
 	}
 	void MoveR (screen& scrn, hero& mhero)
 	{
-		switch (scrn.arr [calculateIndex (l + step)][calculateIndex(b)])
+		switch (scrn.arr [calculateIndex(b)][calculateIndex (l + step)])
 		{
 			case 0:
-				scrn.arr [calculateIndex (l)][calculateIndex(b)] = 0;
-				l += step;
-				r += step;
-				scrn.arr[calculateIndex (l)][calculateIndex(b)] = 3;
+				{
+					scrn.arr[calculateIndex(b)][calculateIndex (l)] = 0;
+					l += step;
+					r += step;
+					scrn.arr[calculateIndex(b)][calculateIndex (l)] = 3;
+				}
 				break;
 			case 1:
-				mhero.Damaged();
+				{
+					mhero.Damaged();
+				}
 				break;
-			default:
-				dir = 2;
+			case 3:
+				{
+					dir = 2;
+				}
+			break;
+			case 4:
+				{
+					dir = 2;
+				}
 				break;
+			case 6:
+				{
+					dir = 2;
+				}
+			break;
 		}
 	}
 	void MoveU (screen& scrn, hero& mhero)
 	{
-		switch (scrn.arr [calculateIndex (l)][calculateIndex(b+step)])
+		switch (scrn.arr[calculateIndex(b+step)][calculateIndex (l)])
 		{
 		case 0:
-				scrn.arr [calculateIndex (l)][calculateIndex(b)] = 0;
+			{
+				scrn.arr[calculateIndex(b)][calculateIndex (l)] = 0;
 				b += step;
 				t += step;
-				scrn.arr[calculateIndex (l)][calculateIndex(b)] = 3;
+				scrn.arr[calculateIndex(b)][calculateIndex (l)] = 3;
+			}
 				break;
 		case 1:
-			mhero.Damaged();
+			{
+				mhero.Damaged();
+				break;
+			}
+		case 3:
+			{
+				dir = 3;
+			}
 			break;
-		default:
-			dir = 3;
+		case 4:
+			{
+				dir = 3;
+			}
+			break;
+		case 6:
+			{
+				dir = 3;
+			}
 			break;
 		}
 	}
 	void MoveD (screen& scrn, hero& mhero)
 	{
-		switch (scrn.arr [calculateIndex (l)][calculateIndex(b-step)])
+		switch (scrn.arr[calculateIndex(b-step)][calculateIndex (l)])
 		{
 		case 0:
-				scrn.arr [calculateIndex (l)][calculateIndex(b)] = 0;
+			{
+				scrn.arr[calculateIndex(b)][calculateIndex (l)] = 0;
 				b -= step;
 				t -= step;
-				scrn.arr[calculateIndex (l)][calculateIndex(b)] = 3;
-				break;
-			case 1:
-				mhero.Damaged();
-				break;
-			default:
+				scrn.arr[calculateIndex(b)][calculateIndex (l)] = 3;
+			}
+			break;
+		case 1:
+			{
+					mhero.Damaged();
+			}
+			break;
+		case 3:
+			{
 				dir = 0;
-				break;
+			}
+			break;
+		case 4:
+			{
+				dir = 0;
+			}
+			break;
+		case 6:
+			{
+				dir = 0;
+			}
+			break;
 		}
 	}
 	

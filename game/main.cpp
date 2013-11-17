@@ -6,39 +6,65 @@
 using namespace std;
 
 //global variables
-int wW = 420, wH = 420;
+int wW = 540, wH = 460;
 int border = 20;
 int maxsteps = ((wW - border)/ step);
+
 unsigned int textures[10];
-unsigned int NUM_LVL = 1;
+unsigned int NUM_LVL = 0;
 
 //--------------------
 //game's objects
 
-screen scrn (wW, border, step);
+screen scrn;
 
 list <enemy> enemies;
 list <brick> bricks;
 list <bomb> bombs;
 
 hero Main (scrn);
-portal lvlup ( 0, 0, 0, 0);
+portal lvlup ( 0, 0, 0, 0, scrn);
 
 list <enemy>::iterator pos;
+
+//-----------------------
+int calculateCoordinates (int x)
+{
+		x *= step;
+        x += 10;
+        return x;
+}
+//-----------------------
 
 void createLevel ()
 {
         scrn.clearScreen();
-        enemies.clear();
-        bricks.clear();
-        bombs.clear();
+		switch (NUM_LVL)
+		{
+		case  0:
+			{
+				enemies.push_back(enemy (calculateCoordinates(12),calculateCoordinates(13), calculateCoordinates(5), calculateCoordinates(6), scrn));
+				enemies.push_back(enemy (calculateCoordinates(5),calculateCoordinates(6), calculateCoordinates(0), calculateCoordinates(1), scrn));
+				enemies.push_back(enemy (calculateCoordinates(6),calculateCoordinates(7), calculateCoordinates(7), calculateCoordinates(8), scrn));
+			
+			}
+			break;
+		default:
+			{
+			std::cout<<"LOL"<<std::cout;
+			}
+		}
 
-        enemies.push_back(enemy(50, 90, 130, 170));
-        enemies.push_back(enemy(50, 90, 50, 90));
+		bombs.push_back (bomb(-100,-60, -100, -60));
 
-		bombs.push_back(bomb(-100,-60, -100, -60));
-		bricks.push_back(brick (90, 130, 10, 50, scrn));
-		lvlup = portal(370,410, 370, 410);
+		lvlup = portal (10, 50, 10, 50, scrn);
+
+		for (int i=0; i<13; i++)
+		{
+			for ( int j = 0; j<15; j++)
+				std::cout<< scrn.arr[i][j]<<" ";
+			std::cout<<std::endl;
+		}
 }
 
 bool levelIsCompleted ()
@@ -55,18 +81,11 @@ bool levelIsCompleted ()
 void levelUp()
 {
 	++NUM_LVL;
-	createLevel();
 }
 
 void boom (int);
 void enemyMotion(int);
 
-int calculateCoordinates (int x)
-{
-		x *= step;
-        x += 10;
-        return x;
-}
 //-----------------------------------
 
 void init (void)
@@ -85,28 +104,34 @@ void init (void)
 
 void redraw (void)
 {
-        glClear (GL_COLOR_BUFFER_BIT);
-
-        scrn.Draw(wW, wH, textures[0]);
+	glClear (GL_COLOR_BUFFER_BIT);
+	scrn.Draw(wW, wH, textures[0]);
 	
-        for (list<brick>::iterator i = bricks.begin(); i!= bricks.end(); ++i){
-                i->Draw(textures[3]);
-        }
-        for (list<enemy>::iterator i = enemies.begin(); i!= enemies.end(); ++i){
-                i->drawHero();
-        }
-        Main.drawHero(textures[1]);
-        if (! bombs.empty())
-		{
-			bombs.begin()->drawBomb(textures[2]);
-		}
-        lvlup.Draw(textures[4]);
-		 
-		if (levelIsCompleted() == true && Main.b == lvlup.b && Main.r ==lvlup.r)
-        {
-                levelUp();
-        }
-        glFlush();
+	for (list<brick>::iterator i = bricks.begin(); i != bricks.end(); ++i)
+	{
+		i->Draw(textures[3]);
+	}
+	for (list<enemy>::iterator i = enemies.begin(); i != enemies.end(); ++i)
+	{
+		i->drawHero();
+	}
+	Main.drawHero(textures[1]);
+
+	/*
+	if ( bombs.empty() != true)
+	{
+		std::cout<<bombs.size()<<std::endl;
+		(*bombs.begin()).drawBomb(textures[2]);
+	}
+	*/
+	lvlup.Draw(textures[4]);
+
+	if (levelIsCompleted() == true && Main.b == lvlup.b && Main.r ==lvlup.r)
+	{
+		levelUp();
+	}
+
+	glFlush();
 }
 
 void enemyMotion ( int = 0)
@@ -134,7 +159,7 @@ void bomb::damage()
                         }
                         if (scrn.arr[calculateIndex(l)+i][calculateIndex(b)] == 3)
                         {
-                                enemies.remove( enemy (l+i*step, r+i*step, b, t) );
+                                enemies.remove( enemy (l+i*step, r+i*step, b, t, scrn) );
                         }
                 }
         }
@@ -151,7 +176,7 @@ void bomb::damage()
                         }
                         if (scrn.arr[calculateIndex(l)-i][calculateIndex(b)] == 3)
                         {
-                                enemies.remove( enemy (l-i*step, r-i*step, b, t) );
+                                enemies.remove( enemy (l-i*step, r-i*step, b, t, scrn) );
                         }
                 }
         }
@@ -168,7 +193,7 @@ void bomb::damage()
 						}
 						if (scrn.arr[calculateIndex(l)][calculateIndex(b)+i] == 3)
 						{
-							enemies.remove( enemy (l, r, b+i*step, t+i*step) );
+							enemies.remove( enemy (l, r, b+i*step, t+i*step, scrn) );
 						}
 				}
 		}
@@ -184,7 +209,7 @@ void bomb::damage()
 				}
 				if (scrn.arr[calculateIndex(l)][calculateIndex(b)-i] == 3)
 				{
-					enemies.remove( enemy (l, r, b-i*step, t-i*step) );
+					enemies.remove( enemy (l, r, b-i*step, t-i*step, scrn) );
 				}
 			}
         }
@@ -227,6 +252,17 @@ void MyFunc ( GLint button, GLint action, GLint x, GLint y )
                 *(bombs.begin()) = bomb (Main.l, Main.r, Main.b, Main.t);
                 redraw ();
         }
+		 if ( button == GLUT_RIGHT_BUTTON && action == GLUT_DOWN )
+        {
+			for (int i=0; i<13; i++)
+			{
+				for (int j=0; j<15; j++)
+				{
+					std::cout<<scrn.arr[i][j]<<" ";
+				}
+				std::cout<<std::endl;
+			}
+        }
         
         glFlush();
 }
@@ -234,34 +270,53 @@ void MyFunc ( GLint button, GLint action, GLint x, GLint y )
 
 void MyKeyboard( int key, int x, int y)
 {
-        switch(key)
-        {
-        case 101:
-                {
-                        Main.MoveD(scrn, lvlup);
-						
-                        redraw();
-                }
-                break;
-        case 102:
-                {
-                        Main.MoveR(scrn, lvlup);
-                        redraw();
-                }
-                break;
-        case 103:
-                {
-                        Main.MoveU(scrn, lvlup);
-                        redraw();
-                }
-                break;
-        case 100:
-                {
-                        Main.MoveL(scrn, lvlup);
-                        redraw();
-                }
-                break;
-        }
+	switch(key)
+	{
+	case 101:
+		{
+			std::cout<<"101"<< std::endl;
+			Main.MoveU(scrn, lvlup);
+			for (int i = 0; i < 13; i++)
+			{
+				for (int j = 0; j< 15;j++)
+				std::cout<<scrn.arr[i][j]<<" ";
+				std::cout<<std::endl;
+			}
+			std::cout<<std::endl;
+			redraw();
+		}
+		break;
+	case 102:
+		{
+			std::cout<<"102"<< std::endl;
+			Main.MoveR(scrn, lvlup);
+			redraw();
+			for (int i = 0; i < 13; i++)
+			{
+				for (int j = 0; j< 15;j++)
+				std::cout<<scrn.arr[i][j]<<" ";
+				std::cout<<std::endl;
+			}
+			std::cout<<std::endl;
+			
+
+		}
+		break;
+	case 103:
+		{
+			std::cout<<"103"<< std::endl;
+			Main.MoveD(scrn, lvlup);
+			redraw();
+		}
+		break;
+	case 100:
+		{
+			std::cout<<"100"<< std::endl;
+			Main.MoveL(scrn, lvlup);
+			redraw();
+		}
+		break;
+	}
 
         glFlush();
 }
@@ -272,10 +327,11 @@ int main ( int argc, char** argv)
 	glutInitDisplayMode (GLUT_SINGLE | GLUT_RGB);
 	glutInitWindowPosition (50, 100);
 	glutInitWindowSize( wW, wH);
-	glutCreateWindow("smth strange");
-	init();
+	glutCreateWindow("Dyna blaster");
 
+	init();
 	createLevel();
+
 	glutDisplayFunc ( redraw );
 	glutTimerFunc(100, enemyMotion, 0);
 	glutReshapeFunc ( reshapeFunc);

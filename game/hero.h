@@ -10,7 +10,7 @@ public:
 
 	hero (screen &scrn): l (10), r(50), b(370), t(410), lives (2), inportal(false) 
 	{	
-		scrn.arr[calculateIndex (l)][calculateIndex(b)] = 1;
+		scrn.arr[calculateIndex(b)][calculateIndex (l)] = 1;
 	}
 
 	void drawHero(unsigned int texture)
@@ -78,63 +78,41 @@ public:
 	void MoveL (screen &scrn, portal& quit)
 	{
 		
-		if ( scrn.arr[calculateIndex (l - step)][calculateIndex(b)] == 3 )
+		if ( scrn.arr[calculateIndex(b)][calculateIndex (l - step)] == 3 )
 		{
 			Damaged();
 		}
 		else
-			if ( scrn.arr[calculateIndex (l - step)][calculateIndex(b)] == 0 )
+			if ( scrn.arr[calculateIndex(b)][calculateIndex (l - step)] == 0 )
 			{
-				scrn.arr[calculateIndex (l)][calculateIndex(b)] = 0;
+				scrn.arr[calculateIndex(b)][calculateIndex (l)] = 0;
 				l -= step;
 				r -= step;
-				scrn.arr[calculateIndex (l)][calculateIndex(b)] = 1; 
+				scrn.arr[calculateIndex(b)][calculateIndex (l)] = 1; 
 			}
 			else 
-				if (scrn.arr[calculateIndex (l - step)][calculateIndex(b)] == 6 && quit.up == true)
+				if (scrn.arr[calculateIndex(b)][calculateIndex (l - step)] == 6 && quit.up == true)
 				{
 					inportal = true;
 				}
 	}
 	void MoveR (screen &scrn, portal& quit)
 	{
-		if ( scrn.arr[calculateIndex (l + step)][calculateIndex(b)] == 3 )
+		if ( scrn.arr[calculateIndex(b)][calculateIndex (l + step)] == 3 )
 		{
 			Damaged();
 		}
 		else
 		{
-			if (scrn.arr [calculateIndex (l + step)][calculateIndex(b)] == 0)
+			if (scrn.arr[calculateIndex(b)][calculateIndex (l + step)] == 0)
 			{
-				scrn.arr [calculateIndex (l)][calculateIndex(b)] = 0;
+				scrn.arr[calculateIndex(b)][calculateIndex (l)] = 0;
 				l += step;
 				r += step;
-				scrn.arr[calculateIndex (l)][calculateIndex(b)] = 1; 
+				scrn.arr[calculateIndex(b)][calculateIndex (l)] = 1; 
 			}
 			else 
-				if (scrn.arr[calculateIndex (l + step)][calculateIndex(b)] == 6 && quit.up==true)
-				{
-					inportal = true;
-				}
-		}
-	}
-	void MoveU (screen &scrn, portal& quit)
-	{
-		if ( scrn.arr[calculateIndex (l)][calculateIndex(b - step)] == 3 )
-		{
-			Damaged();
-		}
-		else
-		{
-			if (scrn.arr[calculateIndex (l)][calculateIndex(b - step)] == 0 )
-			{
-				scrn.arr[calculateIndex (l)][calculateIndex(b)] = 0;
-				b -= step;
-				t -= step;
-				scrn.arr[calculateIndex (l)][calculateIndex(b)] = 1; 
-			}
-			else 
-				if (scrn.arr[calculateIndex (l)][calculateIndex(b -step)] == 6 && quit.up==true)
+				if (scrn.arr[calculateIndex(b)][calculateIndex (l + step)] == 6 && quit.up==true)
 				{
 					inportal = true;
 				}
@@ -142,21 +120,43 @@ public:
 	}
 	void MoveD (screen &scrn, portal& quit)
 	{
-		if ( scrn.arr[calculateIndex (l)][calculateIndex(b + step)] == 3 )
+		if ( scrn.arr[calculateIndex(b - step)][calculateIndex (l)] == 3 )
 		{
 			Damaged();
 		}
 		else
 		{
-			if (scrn.arr[calculateIndex (l)][calculateIndex(b + step)] == 0)
+			if (scrn.arr[calculateIndex(b - step)][calculateIndex (l)] == 0 )
 			{
-				scrn.arr [calculateIndex (l)][calculateIndex(b)] = 0;
-				b += step;
-				t += step;
-				scrn.arr[calculateIndex (l)][calculateIndex(b)] = 1; 
+				scrn.arr[calculateIndex(b)][calculateIndex (l)] = 0;
+				b -= step;
+				t -= step;
+				scrn.arr[calculateIndex(b)][calculateIndex (l)] = 1; 
 			}
 			else 
-				if (scrn.arr[calculateIndex (l)][calculateIndex(b + step)] == 6 && quit.up==true)
+				if (scrn.arr[calculateIndex(b -step)][calculateIndex (l)] == 6 && quit.up==true)
+				{
+					inportal = true;
+				}
+		}
+	}
+	void MoveU (screen &scrn, portal& quit)
+	{
+		if ( scrn.arr[calculateIndex(b + step)][calculateIndex (l)] == 3 )
+		{
+			Damaged();
+		}
+		else
+		{
+			if (scrn.arr[calculateIndex(b + step)][calculateIndex (l)] == 0)
+			{
+				scrn.arr[calculateIndex(b)][calculateIndex (l)] = 0;
+				b += step;
+				t += step;
+				scrn.arr[calculateIndex(b)][calculateIndex (l)] = 1; 
+			}
+			else 
+				if (scrn.arr[calculateIndex(b + step)][calculateIndex (l)] == 6 && quit.up==true)
 				{
 					inportal = true;
 				}

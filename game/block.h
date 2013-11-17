@@ -50,7 +50,10 @@ public:
 	int l, r, b, t;
 	bool up;
 	portal(): l(0), r(0), b(0), t(0), up(false){}
-	portal (int _l, int _r, int _b, int _t):l(_l), r(_r), b(_b), t(_t), up(false){}
+	portal (int _l, int _r, int _b, int _t, screen& scrn):l(_l), r(_r), b(_b), t(_t), up(false)
+	{
+		scrn.arr[calculateIndex(b)][calculateIndex(l)] = 6;
+	}
 	
 	void Draw (unsigned int texture)
 	{

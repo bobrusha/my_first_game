@@ -6,7 +6,7 @@
 
 using namespace std;
 
- int step = 40;
+int step = 40;
 int calculateIndex (int x)
 {
 	x += (step - 10);
@@ -18,49 +18,53 @@ class screen
 {
 public:
 	
-	int arr [12][12];
-	int k;
+	int arr [13][15];
+
+	//int w, h;
 	// 0 - free
 	// 1 - hero
 	// 2 - obj
 	// 3 - enemy
-	// 4 - 
+	// 4 - beaton
 	// 5 - bonus
 	// 6 - exit
 
 
 	void clearScreen()
 	{
-		for (int i = 0; i < k+2; i++)
-			for ( int j=0; j<k; j++)
+		for (int i = 2; i < 12; i++)
+			for ( int j=0; j<14; j++)
 				arr[i][j] = 0;
 
-		for (int i = 2; i < k+2; i=i+2)
-			for ( int j=2; j<k; j=j+2)
+		for (int i = 2; i < 11; i=i+2)
+			for ( int j=2; j<13; j=j+2)
 			{
 				arr[i][j] = 4;
 			}
 		
-		for (int i = 0; i < k+2; i++)
+		for (int i = 0; i < 12; i++)
 			arr[i][0] = 4;
-		for (int i = 0; i < k+2; i++)
-			arr[i][k+1] = 4;
-		for (int j = 0; j < k+2; j++)
+		for (int i = 0; i < 12; i++)
+			arr[i][14] = 4;
+
+		for (int j = 0; j < 15; j++)
 			arr[0][j] = 4;
-		for (int j = 0; j < k+2; j++)
-			arr[k+1][j] = 4;
+		for (int j = 0; j < 15; j++)
+			arr[12][j] = 4;
 	}
-	
-	screen( int W, int brdr, int stp): k((W - brdr)/stp)
+	screen ()
 	{
 		clearScreen();
 	}
+
+	/*
 	screen(screen& tmp)
 	{
-		for (int i = 0; i < k+2; i++)
-			for ( int j=0; j<k; j++)
+		for (int i = 0; i < 13; i++)
+			for ( int j=0; j<15; j++)
 				arr[i][j] = tmp.arr[i][j];
 	}
+	*/
 	void Draw(int w, int h, unsigned int texture)
 	{
 		glEnable (GL_TEXTURE_2D);
@@ -85,7 +89,5 @@ public:
 
 		glFlush();
 	}
-	
-
 };
 #endif

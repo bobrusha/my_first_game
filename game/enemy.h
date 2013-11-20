@@ -22,7 +22,6 @@ public:
 		{
 			case 0:
 				{
-					std::cout<<scrn.arr[calculateIndex(b)][calculateIndex (l - step)]<<std::endl;
 					scrn.arr[calculateIndex(b)][calculateIndex (l)] = 0;
 					l -= step;
 					r -= step;
@@ -34,16 +33,9 @@ public:
 					mhero.Damaged();
 				}
 				break;
+			case 2:
 			case 3:
-				{
-					dir = 1;
-				}
-				break;
 			case 4:
-				{
-					dir = 1;
-				}
-				break;
 			case 6:
 				{
 					dir = 1;
@@ -68,16 +60,9 @@ public:
 					mhero.Damaged();
 				}
 				break;
+			case 2:
 			case 3:
-				{
-					dir = 2;
-				}
-			break;
 			case 4:
-				{
-					dir = 2;
-				}
-				break;
 			case 6:
 				{
 					dir = 2;
@@ -102,16 +87,9 @@ public:
 				mhero.Damaged();
 				break;
 			}
+		case 2:
 		case 3:
-			{
-				dir = 3;
-			}
-			break;
 		case 4:
-			{
-				dir = 3;
-			}
-			break;
 		case 6:
 			{
 				dir = 3;
@@ -136,16 +114,9 @@ public:
 					mhero.Damaged();
 			}
 			break;
+		case 2:
 		case 3:
-			{
-				dir = 0;
-			}
-			break;
 		case 4:
-			{
-				dir = 0;
-			}
-			break;
 		case 6:
 			{
 				dir = 0;

@@ -36,6 +36,20 @@ int calculateCoordinates (int x)
 }
 //-----------------------
 
+int lvl1[10][13] =
+{
+	{ 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 2, 2, 0},
+	{ 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	{ 0, 0, 0, 0, 2, 0, 2, 0, 2, 0, 0, 0, 0},
+	{ 0, 2, 2, 0, 2, 2, 0, 0, 2, 0, 0, 0, 0},
+	{ 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	{ 2, 0, 0, 2, 0, 2, 0, 2, 2, 0, 0, 2, 0},
+	{ 2, 0, 0, 0, 2, 0, 0, 2, 2, 0, 0, 2, 0},
+	{ 2, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0},
+	{ 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0},
+	{ 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 2, 0},
+
+};
 void createLevel ()
 {
         scrn.clearScreen();
@@ -46,6 +60,13 @@ void createLevel ()
 				enemies.push_back(enemy (calculateCoordinates(12),calculateCoordinates(13), calculateCoordinates(5), calculateCoordinates(6), scrn));
 				enemies.push_back(enemy (calculateCoordinates(5),calculateCoordinates(6), calculateCoordinates(0), calculateCoordinates(1), scrn));
 				enemies.push_back(enemy (calculateCoordinates(6),calculateCoordinates(7), calculateCoordinates(7), calculateCoordinates(8), scrn));
+
+				bricks.push_back(brick (calculateCoordinates(6), calculateCoordinates(7), calculateCoordinates(8), calculateCoordinates(9), scrn));
+				bricks.push_back(brick (calculateCoordinates(11), calculateCoordinates(12), calculateCoordinates(8), calculateCoordinates(9), scrn));
+				bricks.push_back(brick (calculateCoordinates(6), calculateCoordinates(7), calculateCoordinates(9), calculateCoordinates(10), scrn));
+				bricks.push_back(brick (calculateCoordinates(6), calculateCoordinates(7), calculateCoordinates(10), calculateCoordinates(11), scrn));
+				bricks.push_back(brick (calculateCoordinates(7), calculateCoordinates(8), calculateCoordinates(8), calculateCoordinates(9), scrn));
+
 			
 			}
 			break;
@@ -54,8 +75,6 @@ void createLevel ()
 			std::cout<<"LOL"<<std::cout;
 			}
 		}
-
-		bombs.push_back (bomb(-100,-60, -100, -60));
 
 		lvlup = portal (10, 50, 10, 50, scrn);
 
@@ -115,15 +134,12 @@ void redraw (void)
 	{
 		i->drawHero();
 	}
+	for (list<bomb>::iterator i = bombs.begin(); i != bombs.end(); ++i)
+	{
+		i->drawBomb(textures[2]);
+	}
 	Main.drawHero(textures[1]);
 
-	/*
-	if ( bombs.empty() != true)
-	{
-		std::cout<<bombs.size()<<std::endl;
-		(*bombs.begin()).drawBomb(textures[2]);
-	}
-	*/
 	lvlup.Draw(textures[4]);
 
 	if (levelIsCompleted() == true && Main.b == lvlup.b && Main.r ==lvlup.r)
@@ -147,67 +163,67 @@ void enemyMotion ( int = 0)
 void bomb::damage()
 {
         
-        if (scrn.arr[calculateIndex(l)+1][calculateIndex(b)] != 4)
+        if (scrn.arr[calculateIndex(b)][calculateIndex(l)+1] != 4)
         { 
                 for (int i=0; i <= dst; ++i)
                 {
-                        if (scrn.arr[calculateIndex(l)+i][calculateIndex(b)] == 2)
+                        if (scrn.arr[calculateIndex(b)][calculateIndex(l)+i] == 2)
                         {
                                 bricks.remove(brick(l+i*step, r+(i*step), b, t, scrn));
-                                scrn.arr[calculateIndex(l)+i][calculateIndex(b)] = 0;
+                                scrn.arr[calculateIndex(b)][calculateIndex(l)+i] = 0;
                                 break;
                         }
-                        if (scrn.arr[calculateIndex(l)+i][calculateIndex(b)] == 3)
+                        if (scrn.arr[calculateIndex(b)][calculateIndex(l)+i] == 3)
                         {
                                 enemies.remove( enemy (l+i*step, r+i*step, b, t, scrn) );
                         }
                 }
         }
 
-        if (scrn.arr[calculateIndex(l)-1][calculateIndex(b)] != 4)
+        if (scrn.arr[calculateIndex(b)][calculateIndex(l)-1] != 4)
         { 
                 for (int i=0; i <= dst; ++i)
                 {
-                        if (scrn.arr[calculateIndex(l)-i][calculateIndex(b)] == 2)
+                        if (scrn.arr[calculateIndex(b)][calculateIndex(l)-i] == 2)
                         {
                                 bricks.remove(brick(l-i*step, r-i*step, b, t, scrn));
-                                scrn.arr[calculateIndex(l)-i][calculateIndex(b)] = 0;
+                                scrn.arr[calculateIndex(b)][calculateIndex(l)-i] = 0;
                                 break;
                         }
-                        if (scrn.arr[calculateIndex(l)-i][calculateIndex(b)] == 3)
+                        if (scrn.arr[calculateIndex(b)][calculateIndex(l)-i] == 3)
                         {
                                 enemies.remove( enemy (l-i*step, r-i*step, b, t, scrn) );
                         }
                 }
         }
 
-        if (scrn.arr[calculateIndex(l)][calculateIndex(b)+1] != 4)
+        if (scrn.arr[calculateIndex(b)+1][calculateIndex(l)] != 4)
         { 
                 for (int i=0; i <= dst; ++i)
                 {
-                        if (scrn.arr[calculateIndex(l)][calculateIndex(b)+i] == 2)
+                        if (scrn.arr[calculateIndex(b)+i][calculateIndex(l)] == 2)
                         {
 							bricks.remove(brick(l, r, b+i*step, t+i*step, scrn));
-							scrn.arr[calculateIndex(l)][calculateIndex(b)+i] = 0;
+							scrn.arr[calculateIndex(b)+i][calculateIndex(l)] = 0;
 							break;
 						}
-						if (scrn.arr[calculateIndex(l)][calculateIndex(b)+i] == 3)
+						if (scrn.arr[calculateIndex(b)+i][calculateIndex(l)] == 3)
 						{
 							enemies.remove( enemy (l, r, b+i*step, t+i*step, scrn) );
 						}
 				}
 		}
-		if (scrn.arr[calculateIndex(l)][calculateIndex(b)-1] != 4)
+		if (scrn.arr[calculateIndex(b)-1][calculateIndex(l)] != 4)
 		{
 			for (int i = 0; i <= dst; i++)
 			{
-				if (scrn.arr[calculateIndex(l)][calculateIndex(b)-i] == 2)
+				if (scrn.arr[calculateIndex(b)-i][calculateIndex(l)] == 2)
 				{
 					bricks.remove(brick(l, r, b-i*step, t-i*step, scrn));
-					scrn.arr[calculateIndex(l)][calculateIndex(b)+i] = 0;
+					scrn.arr[calculateIndex(b)+i][calculateIndex(l)] = 0;
 					break;
 				}
-				if (scrn.arr[calculateIndex(l)][calculateIndex(b)-i] == 3)
+				if (scrn.arr[calculateIndex(b)-i][calculateIndex(l)] == 3)
 				{
 					enemies.remove( enemy (l, r, b-i*step, t-i*step, scrn) );
 				}
@@ -225,11 +241,17 @@ void boom (int = 0)
         }
         if ( i == 20)
         {
+			if(bombs.empty() == false)
+			{
+				std::cout<<"I'm there!"<<std::endl;
                 bombs.begin()-> damage();
-                *(bombs.begin()) = bomb();
+
+				bombs.remove(*(bombs.begin()));
+				std::cout<<bombs.size()<<std::endl;
                 redraw ();
                 glFlush();
                 return;
+			}
         }
 }
 
@@ -240,7 +262,7 @@ void reshapeFunc(GLint newWidth, GLint newHeight)
         glLoadIdentity ();
         gluOrtho2D (0.0, GLdouble(newWidth),0.0, GLdouble( newHeight));
         wW = newWidth;
-        wH =  newHeight;
+        wH = newHeight;
 
         glClear ( GL_COLOR_BUFFER_BIT);
 }
@@ -249,7 +271,7 @@ void MyFunc ( GLint button, GLint action, GLint x, GLint y )
 {
         if ( button == GLUT_LEFT_BUTTON && action == GLUT_DOWN )
         {
-                *(bombs.begin()) = bomb (Main.l, Main.r, Main.b, Main.t);
+                bombs.push_back( bomb (Main.l, Main.r, Main.b, Main.t));
                 redraw ();
         }
 		 if ( button == GLUT_RIGHT_BUTTON && action == GLUT_DOWN )

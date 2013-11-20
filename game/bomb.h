@@ -45,4 +45,9 @@ public:
 	/*Переписать функцию так чтобы она была внутри класса*/
 };
 
+bool operator == (const bomb& x1, const bomb& x2)
+{
+	return (x1.l == x2.l && x1.b ==x2.b );
+}
+
 #endif

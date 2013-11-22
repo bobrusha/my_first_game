@@ -14,7 +14,6 @@ public:
 		scrn.arr[calculateIndex(b)][calculateIndex (l)] = 3;
 	}
 	enemy( enemy* x): l (x->l), r(x->r), b(x->b), t(x->t), dir(x->dir) {}
-	~enemy(){}
 	
 	void MoveL (screen& scrn, hero& mhero)
 	{

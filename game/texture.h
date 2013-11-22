@@ -51,6 +51,21 @@ void LoadTextures( unsigned int* textures)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexImage2D(GL_TEXTURE_2D, 0, 3, texture5->sizeX, texture5->sizeY, 0, GL_RGB, GL_UNSIGNED_BYTE, texture5->data);
 
+	myglaux::AUX_RGBImageRec *texture6= myglaux::auxDIBImageLoadA("lose.bmp");
+    glGenTextures(6, &textures[5]);
+    glBindTexture(GL_TEXTURE_2D, textures[5]);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexImage2D(GL_TEXTURE_2D, 0, 3, texture6->sizeX, texture6->sizeY, 0, GL_RGB, GL_UNSIGNED_BYTE, texture6->data);
+
+	myglaux::AUX_RGBImageRec *texture7= myglaux::auxDIBImageLoadA("beaton.bmp");
+    glGenTextures(7, &textures[6]);
+    glBindTexture(GL_TEXTURE_2D, textures[6]);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexImage2D(GL_TEXTURE_2D, 0, 3, texture7->sizeX, texture7->sizeY, 0, GL_RGB, GL_UNSIGNED_BYTE, texture7->data);
+
+
 }
 
 #endif

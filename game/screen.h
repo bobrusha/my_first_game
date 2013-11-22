@@ -35,22 +35,6 @@ public:
 		for (int i = 2; i < 12; i++)
 			for ( int j=0; j<14; j++)
 				arr[i][j] = 0;
-
-		for (int i = 2; i < 11; i=i+2)
-			for ( int j=2; j<13; j=j+2)
-			{
-				arr[i][j] = 4;
-			}
-		
-		for (int i = 0; i < 12; i++)
-			arr[i][0] = 4;
-		for (int i = 0; i < 12; i++)
-			arr[i][14] = 4;
-
-		for (int j = 0; j < 15; j++)
-			arr[0][j] = 4;
-		for (int j = 0; j < 15; j++)
-			arr[12][j] = 4;
 	}
 	screen ()
 	{
